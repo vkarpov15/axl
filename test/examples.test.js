@@ -33,6 +33,7 @@ describe('axl', function() {
 
   it('handling errors', function(done) {
     let isDone = false;
+    let opCount = 0;
 
     axl(function*() {
       yield new Promise((_, reject) => reject(new Error('hello')));
@@ -48,6 +49,7 @@ describe('axl', function() {
       error => {
         assert.equal(error.message, 'Test2');
         assert.ok(!isDone);
+        assert.equal(opCount, 0);
         done();
       },
       () => {
