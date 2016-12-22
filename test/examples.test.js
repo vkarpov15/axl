@@ -34,6 +34,8 @@ describe('axl', function() {
   it('handling errors', function(done) {
     let isDone = false;
     let opCount = 0;
+    let subCount = 0;
+    let subErrorCount = 0;
 
     axl(function*() {
       yield new Promise((_, reject) => reject(new Error('hello')));
@@ -44,12 +46,18 @@ describe('axl', function() {
     }).
     subscribe(
       op$ => {
-        op$.subscribe(v => ++opCount);
+        ++subCount;
+        op$.subscribe(v => ++opCount, err => {
+          assert.equal(err.message, 'hello');
+          ++subErrorCount;
+        });
       },
       error => {
         assert.equal(error.message, 'Test2');
         assert.ok(!isDone);
         assert.equal(opCount, 0);
+        assert.equal(subCount, 1);
+        assert.equal(subErrorCount, 1);
         done();
       },
       () => {
