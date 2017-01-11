@@ -40,9 +40,7 @@ module.exports = function(gen) {
 
     function next(ret) {
       if (ret.done) {
-        if (ret.value !== void 0) {
-          observer.next(toObservable(ret.value));
-        }
+        observer.next(ret.value);
         return observer.complete();
       }
       const value = toObservable(ret.value);

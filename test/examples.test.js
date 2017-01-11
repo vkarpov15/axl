@@ -5,6 +5,7 @@ const assert = require('assert');
 const axl = require('../');
 
 require('rxjs/add/observable/of');
+require('rxjs/add/operator/filter');
 
 describe('axl', function() {
   it('works', function(done) {
@@ -16,7 +17,9 @@ describe('axl', function() {
       const res2 = yield cb => setTimeout(() => cb(null, 'test'), 50);
       assert.equal(res2, 'test');
       isDone = true;
-    }).subscribe(
+    }).
+    filter(v => !!v).
+    subscribe(
       op$ => {
         op$.subscribe(v => ++opCount);
       },
